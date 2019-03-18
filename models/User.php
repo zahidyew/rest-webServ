@@ -11,14 +11,12 @@
       public $password;
 
       //Constructor with DB
-      public function __construct($db)
-      {
+      public function __construct($db) {
          $this->conn = $db;
       }
 
       // For login functionality.
-      public function login()
-      {
+      public function login() {
          //Create query
          $query = 'SELECT name, password FROM ' . $this->table .
             ' WHERE name = :name';
