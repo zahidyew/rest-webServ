@@ -2,7 +2,7 @@
    class Database {
       // DB Params
       private $host = "localhost";
-      private $db_name = "tourism_app";
+      private $db_name = "scan_adv";
       private $username = "root";
       private $password = "";
       private $conn;

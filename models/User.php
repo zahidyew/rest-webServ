@@ -5,8 +5,8 @@
       private $table = 'user';
 
       //User properties/ attributes
-      #public $id;
-      public $name;
+      public $id;
+      public $username;
       public $email;
       public $password;
 
@@ -18,14 +18,14 @@
       // For login functionality.
       public function login() {
          //Create query
-         $query = 'SELECT name, password FROM ' . $this->table .
-            ' WHERE name = :name';
+         $query = 'SELECT * FROM ' . $this->table .
+            ' WHERE username = :name';
 
          // Prepare statement
          $stmt = $this->conn->prepare($query);
 
          // Bind params
-         $stmt->bindParam(':name', $this->name);
+         $stmt->bindParam(':name', $this->username);
 
          // Execute statement
          $stmt->execute();
@@ -37,15 +37,19 @@
             $row = $stmt->fetch(PDO::FETCH_ASSOC); // return associative array.
             // verify the input password, whether it matched the hashed password in db or not
             if (password_verify($this->password, $row['password'])) {
+               $this->id = $row['user_id'];
+               $this->username = $row['username'];
+               $this->email = $row['email'];
+
                return true;
             }
             else { // Wrong Password
-               return 9;
+               return false;
             }      
          } 
-         else { // User does not exists
+         /* else { // User does not exists
             return 19;
-         }
+         } */
       }
 
 
@@ -54,7 +58,7 @@
          // create query
          $query = 'INSERT INTO ' . $this->table . 
          ' SET 
-            name = :name, 
+            username = :name, 
             email = :email,
             password = :pass';
 
@@ -70,7 +74,7 @@
          $hashedPass = password_hash($this->password, PASSWORD_DEFAULT);
 
          // bind params
-         $stmt->bindParam(':name', $this->name);
+         $stmt->bindParam(':name', $this->username);
          $stmt->bindParam(':email', $this->email);
          $stmt->bindParam(':pass', $hashedPass);
 

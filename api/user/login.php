@@ -27,7 +27,7 @@
    } */ 
 
    if(isset($_POST['name']) && isset( $_POST['pass'])) {
-      $user->name = $_POST['name'];
+      $user->username = $_POST['name'];
       $user->password = $_POST['pass'];
    }
    else {
@@ -36,15 +36,30 @@
    }
 
    // Login
-   echo json_encode($user->login());
+   // echo json_encode($user->login());
    
+   if($user->login()) {
+      $user_string = "true, " . $user->id . ", " . $user->username . ", ". $user->email;
+   }
+   else {
+      $user_string = "false";
+   }
 
-   /* // Create array
-   $user_arr = array(
-      'name' => $user->name,
-      'password' => $user->password,
-   );
+   // make JSON
+   echo json_encode($user_string);
+
+      /* // Create array
+      $user_arr = array(
+         'result' => "true",
+         'name' => $user->name,
+         'email' => $user->email
+      );
+   }
+   else {
+      $user_arr = array(
+         'result' => "false"
+      );
+   } */
 
    // Make JSON
-   print_r(json_encode($user_arr)); */
-
+   //print_r(json_encode($user_obj));
