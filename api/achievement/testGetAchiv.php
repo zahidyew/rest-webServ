@@ -24,7 +24,7 @@ if (isset($_GET['userId'])) {
 }
 
 // Quest query. call the function
-$result = $achievement->getUserAchievements();
+$result = $achievement->testGetAchiv();
 // get row count
 $num = $result->rowCount();
 

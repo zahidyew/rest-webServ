@@ -15,17 +15,6 @@
    // Instantiate user object
    $user = new User($db);
 
-   // Get ID
-   //$user->id = isset($_GET['id']) ? $_GET['id'] : die();
-
-   /* if(isset($_GET['name']) && isset($_GET['pass'])) {
-      $user->name = $_GET['name'];
-      $user->password = $_GET['pass'];
-   }
-   else {
-      die();
-   } */ 
-
    if(isset($_POST['name']) && isset( $_POST['pass'])) {
       $user->username = $_POST['name'];
       $user->password = $_POST['pass'];
@@ -34,9 +23,6 @@
       echo 'error';
       die();
    }
-
-   // Login
-   // echo json_encode($user->login());
    
    if($user->login()) {
       $user_string = "true, " . $user->id . ", " . $user->username . ", ". $user->email;
