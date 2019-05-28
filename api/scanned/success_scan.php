@@ -16,14 +16,17 @@
    $scanned = new Scanned($db);
 
    // check if the all the POST variables are sent to server
-   if (isset($_POST['userId']) && isset($_POST['questId'])) {
+   if (isset($_POST['userId']) && isset($_POST['questId']) && isset($_POST['placeId'])) {
       // set the User's attributes to the POST values
       $scanned->user_id = $_POST['userId'];
       $scanned->quest_id = $_POST['questId'];
+      $scanned->place_id = $_POST['placeId'];
    } else {
       echo 'error';
       die();
    }
 
-   // call the signUp func in the User class and echo out the response back to the App.
-   echo json_encode($scanned->success_scan());
+   // call the function
+   $scanned->success_scan();
+
+   //echo json_encode($scanned->success_scan());

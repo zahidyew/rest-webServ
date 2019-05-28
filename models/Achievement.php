@@ -22,13 +22,9 @@ class Achievement {
 
    // Fetch all the Achievements.
    public function listAchievements() {
-      // create query
       $query = 'SELECT * FROM ' . $this->table;
 
-      // prepare statement
       $stmt = $this->conn->prepare($query);
-
-      // execute stmt
       $stmt->execute();
 
       return $stmt;
@@ -123,44 +119,46 @@ class Achievement {
       }
    }
 
+   /* public function checkForNewAchiv() {
+      $query = 'SELECT COUNT(quest_id) FROM scanned 
+                     WHERE user_id = :userId
+                     AND quest_id = :questId';
+
+      $stmt = $this->conn->prepare($query);
+      $stmt->bindParam(':userId', $this->user_id);
+      $stmt->bindParam(':questId', $this->quest_id);
+      $stmt->execute();
+
+      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+      $scansCount = $row['COUNT(quest_id)'];
+
+      $query2 = 'SELECT DISTINCT achievement_name
+                  FROM achievement a, scanned s 
+                  WHERE a.quest_id = :questId 
+                  AND a.requirement = :scansCount';
+
+      $stmt2 = $this->conn->prepare($query2);
+      $stmt2->bindParam(':questId', $this->quest_id);
+      $stmt2->bindParam(':scansCount', $scansCount);
+      $stmt2->execute();
+
+      $num = $stmt2->rowCount();
+
+      if($num > 0) {
+         $row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
+         $newAchiv = $row2['achievement_name'];
+
+         echo json_encode($newAchiv);    
+      }
+      else {
+         echo json_encode("False");      
+      }
+   } */
+   //SELECT DISTINCT achievement_id,achievement_name,level,requirement,a.quest_id FROM achievement a, scanned s WHERE a.quest_id = 2 AND a.requirement = 3
+
+   //SELECT DISTINCT achievement_id,achievement_name,level,requirement,a.quest_id FROM achievement a, scanned s WHERE s.user_id = 2 AND s.quest_id = 2 AND a.requirement = 4
+
    //SELECT COUNT(quest_id) FROM scanned WHERE user_id = 2 AND quest_id = 1
 
    //SELECT DISTINCT achievement_id,logo,achievement_name,level,requirement,a.quest_id FROM achievement a, scanned s WHERE s.user_id = 2 AND a.quest_id = 2 AND a.requirement <= 5
-
-   //SELECT DISTINCT logo,achievement_id FROM achievement a, scanned s WHERE s.user_id = 2 AND a.quest_id = 2 AND a.requirement >= 5
-
-
-   //SELECT DISTINCT quest_id FROM scanned
-
-  /* // fetch one quest
-   public function listSingleQuest() {
-      $query = 'SELECT * FROM ' . $this->table .
-         ' WHERE quest_id = :id';
-
-      // Prepare statement
-      $stmt = $this->conn->prepare($query);
-
-      // Bind params
-      $stmt->bindParam(':id', $this->quest_id);
-
-      // Execute statement
-      $stmt->execute();
-      $num = $stmt->rowCount();
-
-      if ($num > 0) {
-         // fetch the single row
-         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-         // set properties
-         $this->quest_id = $row['quest_id'];
-         $this->quest_name = $row['quest_name'];
-         $this->start_date = $row['start_date'];
-         $this->end_date = $row['end_date'];
-         $this->organizer = $row['organizer'];
-
-         return true;
-      } else {
-         return false;
-      }
-   } */
 }
