@@ -22,28 +22,26 @@ class Achievement {
 
    // Fetch all the Achievements.
    public function listAchievements() {
-      $query = 'SELECT * FROM ' . $this->table;
-
+      $query = 'SELECT * FROM ' . $this->table .' a,
+                  quest q 
+                  WHERE a.quest_id = q.quest_id 
+                  ORDER BY achievement_id ASC';
+      
       $stmt = $this->conn->prepare($query);
       $stmt->execute();
 
       return $stmt;
    }
 
-   public function testGetAchiv() {
+   // list all the Achivs a Quest has
+   public function listQuestAchivs() {
       $query = 'SELECT * FROM 
-                     ' . $this->table . ' a,
-                     scanned s
-                     WHERE s.user_id = :userId
-                     AND s.quest_id = a.quest_id';
+                  ' . $this->table . 
+                  ' WHERE quest_id = :questId
+                  ORDER BY level ASC';
 
-      // Prepare statement
       $stmt = $this->conn->prepare($query);
-
-      // Bind params
-      $stmt->bindParam(':userId', $this->user_id);
-
-      // Execute statement
+      $stmt->bindParam(':questId', $this->quest_id);
       $stmt->execute();
 
       return $stmt;
@@ -119,46 +117,57 @@ class Achievement {
       }
    }
 
-   /* public function checkForNewAchiv() {
-      $query = 'SELECT COUNT(quest_id) FROM scanned 
-                     WHERE user_id = :userId
-                     AND quest_id = :questId';
+   public function questCompletion() {
+      $query = 'SELECT DISTINCT quest_id FROM scanned
+                  WHERE user_id = :userId
+                  ORDER BY quest_id ASC';
 
       $stmt = $this->conn->prepare($query);
       $stmt->bindParam(':userId', $this->user_id);
-      $stmt->bindParam(':questId', $this->quest_id);
       $stmt->execute();
 
-      $row = $stmt->fetch(PDO::FETCH_ASSOC);
-      $scansCount = $row['COUNT(quest_id)'];
+      $numOfQuests = 0;
 
-      $query2 = 'SELECT DISTINCT achievement_name
-                  FROM achievement a, scanned s 
-                  WHERE a.quest_id = :questId 
-                  AND a.requirement = :scansCount';
+      // saves the questId to an array 
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+         $questId[$numOfQuests] = $row['quest_id'];
+         $numOfQuests++;
+      }
 
-      $stmt2 = $this->conn->prepare($query2);
-      $stmt2->bindParam(':questId', $this->quest_id);
-      $stmt2->bindParam(':scansCount', $scansCount);
-      $stmt2->execute();
+      // loop to go through each distinct questId
+      for ($i = 0; $i < $numOfQuests; $i++) {
+         // get the number of times a quest is scanned by the user
+         $query2 = 'SELECT COUNT(quest_id) FROM scanned 
+                     WHERE user_id = :userId
+                     AND quest_id = :questId';
 
-      $num = $stmt2->rowCount();
+         $stmt2 = $this->conn->prepare($query2);
+         $stmt2->bindParam(':userId', $this->user_id);
+         $stmt2->bindParam(':questId', $questId[$i]);
+         $stmt2->execute();
 
-      if($num > 0) {
          $row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
-         $newAchiv = $row2['achievement_name'];
+         $countScans[$i] = $row2['COUNT(quest_id)'];
+         /* echo json_encode($countScans[$i]);
+         echo ", ";  */
 
-         echo json_encode($newAchiv);    
+         // get all the achievements a user has achieved
+         $query3 = 'SELECT DISTINCT achievement_name
+                     FROM achievement a, scanned s 
+                     WHERE s.user_id = :userId 
+                     AND a.quest_id = :questId 
+                     AND a.requirement <= :countScans';
+
+         $stmt3 = $this->conn->prepare($query3);
+         $stmt3->bindParam(':userId', $this->user_id);
+         $stmt3->bindParam(':questId', $questId[$i]);
+         $stmt3->bindParam(':countScans', $countScans[$i]);
+         $stmt3->execute();
+
+         echo json_encode($stmt3->rowCount());
+         echo json_encode(",");
       }
-      else {
-         echo json_encode("False");      
-      }
-   } */
-   //SELECT DISTINCT achievement_id,achievement_name,level,requirement,a.quest_id FROM achievement a, scanned s WHERE a.quest_id = 2 AND a.requirement = 3
-
-   //SELECT DISTINCT achievement_id,achievement_name,level,requirement,a.quest_id FROM achievement a, scanned s WHERE s.user_id = 2 AND s.quest_id = 2 AND a.requirement = 4
-
-   //SELECT COUNT(quest_id) FROM scanned WHERE user_id = 2 AND quest_id = 1
-
-   //SELECT DISTINCT achievement_id,logo,achievement_name,level,requirement,a.quest_id FROM achievement a, scanned s WHERE s.user_id = 2 AND a.quest_id = 2 AND a.requirement <= 5
+   }
 }
+
+//SELECT DISTINCT achievement_name FROM achievement a, scanned s WHERE s.user_id = 2 AND a.quest_id = 2 AND a.requirement <= 10

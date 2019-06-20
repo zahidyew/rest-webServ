@@ -24,5 +24,5 @@
    }
 
    // query. call the function
-   $achievement->getUserAchivs();
-   echo json_encode($achievement->achievement_arr);
+   $achievement->questCompletion();
+   //echo json_encode($achievement->achievement_arr);

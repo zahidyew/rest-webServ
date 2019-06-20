@@ -31,6 +31,7 @@ if ($num > 0) {
          'achievement_id' => $achievement_id,
          'achievement_name' => $achievement_name,
          'quest_id' => $quest_id,
+         'quest_name' => $quest_name,
          'level' => $level,
          'requirement' => $requirement,
          'logo' => $logo

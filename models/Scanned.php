@@ -9,7 +9,7 @@
       public $id;
       public $user_id;
       public $quest_id;
-      public $place_id;
+      public $item_id;
 
       //Constructor with DB
       public function __construct($db) {
@@ -21,12 +21,12 @@
          $query = 'SELECT * FROM ' . $this->table . 
                      ' WHERE user_id = :userId 
                      AND quest_id = :questId
-                     AND place_id = :placeId';
+                     AND item_id = :itemId';
 
          $stmt = $this->conn->prepare($query);
          $stmt->bindParam(':userId', $this->user_id);
          $stmt->bindParam(':questId', $this->quest_id);
-         $stmt->bindParam(':placeId', $this->place_id);
+         $stmt->bindParam(':itemId', $this->item_id);
 
          $stmt->execute();
          $num = $stmt->rowCount();
@@ -40,15 +40,16 @@
             $query2 = 'INSERT INTO ' . $this->table .
                ' SET user_id = :userId, 
                quest_id = :questId,
-               place_id = :placeId';
+               item_id = :itemId';
 
             $stmt2 = $this->conn->prepare($query2);
             $stmt2->bindParam(':userId', $this->user_id);
             $stmt2->bindParam(':questId', $this->quest_id);
-            $stmt2->bindParam(':placeId', $this->place_id);
+            $stmt2->bindParam(':itemId', $this->item_id);
 
             if ($stmt2->execute()) {
                //echo json_encode("Done");
+               // check if user unlocked new Achievement
                $this->checkForNewAchiv();
             } 
             else {
@@ -93,3 +94,7 @@
          }
       }
    }
+
+
+   //SELECT * FROM scanned WHERE user_id = 2 AND quest_id = 2
+   /* then save the item_id, fetch all the items, compare the ids, if same return true(scanned) else false. */

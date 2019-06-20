@@ -6,23 +6,15 @@
    header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
    include_once '../../config/Database.php';
-   include_once '../../models/Achievement.php';
+   include_once '../../models/Quest.php';
 
    // Instantiate DB & connect
    $database = new Database();
    $db = $database->connect();
 
-   // Instantiate object
-   $achievement = new Achievement($db);
-
-   // check for GET variable
-   if (isset($_GET['userId'])) {
-      $achievement->user_id = $_GET['userId'];
-   } else {
-      echo "An error occured. No GET variable sent.";
-      die();
-   }
+   // Instantiate quest object
+   $quest = new Quest($db);
 
    // query. call the function
-   $achievement->getUserAchivs();
-   echo json_encode($achievement->achievement_arr);
+   $quest->getQuestsAndBadges();
+   echo json_encode($quest->quest_arr);

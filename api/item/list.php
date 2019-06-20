@@ -6,51 +6,51 @@ header('Access-Control-Allow-Methods: GET');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
 include_once '../../config/Database.php';
-include_once '../../models/Achievement.php';
+include_once '../../models/Item.php';
 
 // Instantiate DB & connect
 $database = new Database();
 $db = $database->connect();
 
-// Instantiate quest object
-$achievement = new Achievement($db);
+// Instantiate item object
+$item = new Item($db);
 
 // check for GET variable
-if (isset($_GET['userId'])) {
-   $achievement->user_id = $_GET[ 'userId'];
+if (isset($_GET['questId']) && !empty($_GET['questId'])) {
+   $item->quest_id = $_GET['questId'];
 } else {
    echo "An error occured. No GET variable sent.";
    die();
 }
 
-// Quest query. call the function
-$result = $achievement->testGetAchiv();
-// get row count
+$result = $item->getItems();
+
 $num = $result->rowCount();
 
-// if quest(s) exist
 if ($num > 0) {
-   $achievement_arr = array();
+   $items_arr = array();
 
    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
       extract($row);
-
-      $achievement_item = array(
-         'achievement_id' => $achievement_id,
-         'achievement_name' => $achievement_name,
-         'quest_id' => $quest_id,
-         'level' => $level,
-         'requirement' => $requirement,
-         'logo' => $logo
+      $items_item = array(
+         'item_id' => $item_id,
+         'item_name' => $item_name,
+         'place_name' => $place_name,
+         'location' => $location,
+         'description' => $description,
+         'latitude' => $latitude,
+         'longitude' => $longitude,
+         'image' => $image,
+         'quest_id' => $quest_id
       );
       // Push to "data"
-      array_push($achievement_arr, $achievement_item);
+      array_push($items_arr, $items_item);
    }
    // turn to JSON and output them.
-   echo json_encode($achievement_arr);
+   echo json_encode($items_arr);
 } else {
    // No Quest
    echo json_encode(
-      array('message' => 'No Achievement Found')
+      array('message' => 'No Items Found')
    );
 }

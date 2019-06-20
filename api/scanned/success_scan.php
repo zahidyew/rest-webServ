@@ -16,11 +16,11 @@
    $scanned = new Scanned($db);
 
    // check if the all the POST variables are sent to server
-   if (isset($_POST['userId']) && isset($_POST['questId']) && isset($_POST['placeId'])) {
+   if (isset($_POST['userId']) && isset($_POST['questId']) && isset($_POST['itemId'])) {
       // set the User's attributes to the POST values
       $scanned->user_id = $_POST['userId'];
       $scanned->quest_id = $_POST['questId'];
-      $scanned->place_id = $_POST['placeId'];
+      $scanned->item_id = $_POST['itemId'];
    } else {
       echo 'error';
       die();
