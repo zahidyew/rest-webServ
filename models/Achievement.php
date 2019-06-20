@@ -117,6 +117,7 @@ class Achievement {
       }
    }
 
+   // display the completion progress of all the Quests a user has joined
    public function questCompletion() {
       $query = 'SELECT DISTINCT quest_id FROM scanned
                   WHERE user_id = :userId

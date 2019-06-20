@@ -25,7 +25,7 @@
    }
 
    // call the funct to get the quest with the passed ID if it exists
-   if($quest->listSingleQuest()) {
+   if($quest->selected()) {
       // create array
       $quest_item = array(
          'quest_id' => $quest->quest_id,

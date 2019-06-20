@@ -39,6 +39,7 @@
          return $stmt;
       }
 
+      // fetch all the items a Quest has and showed whether an Item has been scanned by the user.
       public function listItems() {
          $i = 0;
          // get all the itemIDs the user has scanned for a particular Quest

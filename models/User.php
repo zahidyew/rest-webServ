@@ -9,6 +9,7 @@
       public $username;
       public $email;
       public $password;
+      public $quest_id;
 
       //Constructor with DB
       public function __construct($db) {
@@ -21,13 +22,8 @@
          $query = 'SELECT * FROM ' . $this->table .
             ' WHERE username = :name';
 
-         // Prepare statement
          $stmt = $this->conn->prepare($query);
-
-         // Bind params
          $stmt->bindParam(':name', $this->username);
-
-         // Execute statement
          $stmt->execute();
 
          $num = $stmt->rowCount();
@@ -51,7 +47,6 @@
             return 19;
          } */
       }
-
 
       // For sign up functionality
       function signUp() {
@@ -86,4 +81,34 @@
             return false;
          }
       }
+
+      // used when user clicked the button to join a Quest. Insert the data into user_quest table.
+      public function joinQuest() {
+         $query1 = 'SELECT * FROM user_quest 
+                     WHERE user_id = :userId 
+                     AND quest_id = :questId';
+
+         $stmt1 = $this->conn->prepare($query1);
+         $stmt1->bindParam(':userId', $this->id);
+         $stmt1->bindParam(':questId', $this->quest_id);
+         $stmt1->execute();
+
+         if($stmt1->rowCount() > 0) {
+            return "Duplicate";
+         }
+         else {
+            $query2 = 'INSERT INTO user_quest 
+                        SET user_id = :userId, quest_id = :questId';
+
+            $stmt2 = $this->conn->prepare($query2);
+            $stmt2->bindParam(':userId', $this->id);
+            $stmt2->bindParam(':questId', $this->quest_id);
+
+            if ($stmt2->execute()) {
+               return true;
+            } else {
+               return false;
+            }
+         }
+      } 
    }

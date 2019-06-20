@@ -20,31 +20,22 @@
 
       // Fetch all the quests.
       public function listQuests() {
-         // create query
          $query = 'SELECT * FROM ' . $this->table;
-
-         // prepare statement
          $stmt = $this->conn->prepare($query);
-
-         // execute stmt
          $stmt->execute();
 
          return $stmt;
       }
 
-      // fetch one quest
-      public function listSingleQuest() {
+      // fetch one clicked quest. list all its details
+      public function selected() {
          $query = 'SELECT * FROM ' . $this->table .
             ' WHERE quest_id = :id';
 
-         // Prepare statement
          $stmt = $this->conn->prepare($query);
-
-         // Bind params
          $stmt->bindParam(':id', $this->quest_id);
-
-         // Execute statement
          $stmt->execute();
+
          $num = $stmt->rowCount();
 
          if ($num > 0) {
@@ -65,12 +56,15 @@
          }
       }
 
+      // get all quests details and the achievements badges. used in homepage
       public function getQuestsAndBadges() {
          $numOfQuests = 0;
          $logo_arr = [];
 
          $query = 'SELECT DISTINCT quest_id FROM quest
                      ORDER BY quest_id ASC';
+
+         //SELECT DISTINCT q.quest_id FROM quest q, user_quest uq WHERE uq.user_id = 2 AND uq.quest_id = q.quest_id
 
          $stmt = $this->conn->prepare($query);
          $stmt->execute();
@@ -124,27 +118,3 @@
    }
 
    //SELECT a.achievement_name, logo, q.quest_name FROM achievement a , quest q WHERE a.quest_id = 2 AND q.quest_id = 2
-
-/* // for getting the event and the quests it contains 
-public function EventAndQuests()
-{
-   $query = 'SELECT * FROM ' . $this->table .
-            ' WHERE id = :id';
-
-   $query = 'SELECT * FROM 
-                        ' . $this->table . ' e, 
-                        quest q
-                        WHERE e.id = :id 
-                        AND e.name = q.eventName';
-
-   // Prepare statement
-   $stmt = $this->conn->prepare($query);
-
-   // Bind params
-   $stmt->bindParam(':id', $this->id);
-
-   // Execute statement
-   $stmt->execute();
-
-   return $stmt;
-} */

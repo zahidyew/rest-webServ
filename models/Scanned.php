@@ -16,6 +16,7 @@
          $this->conn = $db;
       }
 
+      // used when a User scanned a QR code 
       public function success_scan() {
          // check for duplicate first
          $query = 'SELECT * FROM ' . $this->table . 
@@ -59,6 +60,7 @@
          }
       }
 
+      // check if user has unlocked a new Achievement after a successful scan. A sub-function of success_scan.
       public function checkForNewAchiv() {
          $query3 = 'SELECT COUNT(quest_id) FROM scanned 
                      WHERE user_id = :userId
