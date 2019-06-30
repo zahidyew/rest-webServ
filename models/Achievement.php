@@ -88,17 +88,27 @@ class Achievement {
          echo ", ";  */
 
          // get all the achievements a user has achieved
-         $query3 = 'SELECT DISTINCT achievement_id, 
+         /* $query3 = 'SELECT DISTINCT achievement_id, 
                      achievement_name, level, requirement,
                      logo, a.quest_id 
                      FROM achievement a, scanned s 
                      WHERE s.user_id = :userId 
                      AND a.quest_id = :questId 
+                     AND a.requirement <= :countScans'; */
+
+         $query3 = 'SELECT DISTINCT achievement_id, 
+                     achievement_name, level, requirement, 
+                     logo, a.quest_id, q.quest_name 
+                     FROM achievement a, scanned s, quest q 
+                     WHERE s.user_id = :userId 
+                     AND a.quest_id = :aQuestId 
+                     AND q.quest_id = :qQuestId 
                      AND a.requirement <= :countScans';
 
          $stmt3 = $this->conn->prepare($query3);
          $stmt3->bindParam(':userId', $this->user_id);
-         $stmt3->bindParam(':questId', $questId[$i]);
+         $stmt3->bindParam(':aQuestId', $questId[$i]);
+         $stmt3->bindParam(':qQuestId', $questId[$i]);
          $stmt3->bindParam(':countScans', $countScans[$i]);
          $stmt3->execute();
 
@@ -110,7 +120,8 @@ class Achievement {
                'level' => $level,
                'requirement' => $requirement,
                'logo' => $logo,
-               'quest_id' => $quest_id
+               'quest_id' => $quest_id,
+               'quest_name' => $quest_name
             );
             array_push($this->achievement_arr, $achievement_item);
          }

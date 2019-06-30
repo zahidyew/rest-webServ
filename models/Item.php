@@ -74,6 +74,7 @@
 
             for($x = 0; $x < $i; $x++) {
                // when matched, exit the for loop
+               // $item_id here refers to the one fetch from DB bcuz we use extract().
                if($id[$x] == $item_id) {
                   $flag = "Scanned";
                   break;

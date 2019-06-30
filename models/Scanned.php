@@ -28,8 +28,8 @@
          $stmt->bindParam(':userId', $this->user_id);
          $stmt->bindParam(':questId', $this->quest_id);
          $stmt->bindParam(':itemId', $this->item_id);
-
          $stmt->execute();
+         
          $num = $stmt->rowCount();
 
          // if rowCount > 0 then, the QR code has already been scanned by the User
