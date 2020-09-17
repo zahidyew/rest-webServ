@@ -81,7 +81,7 @@ Example of response:
 ```
 
 #### 4) Get all the items a quest has and showed whether an item has been scanned by the user.
-Endpoint: ../api/item/listItems.php?questId=2&userId=2
+Endpoint: ../api/item/listItems.php?questId=2&userId=2 <br>
 Example of response: 
 ```
 [
