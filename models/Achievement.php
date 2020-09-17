@@ -181,5 +181,3 @@ class Achievement {
       }
    }
 }
-
-//SELECT DISTINCT achievement_name FROM achievement a, scanned s WHERE s.user_id = 2 AND a.quest_id = 2 AND a.requirement <= 10
